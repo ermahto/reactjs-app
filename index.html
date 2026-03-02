@@ -15,7 +15,58 @@
   </header>
 
   <main class="layout">
-    <section class="layout__main" id="posts"></section>
+    <section class="layout__main">
+      <section class="controls" id="controls">
+        <div class="controls__search">
+          <label for="search-input" class="controls__label">Search posts</label>
+          <input
+            id="search-input"
+            class="controls__input"
+            type="search"
+            placeholder="Search by title, summary, or tags..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="controls__row">
+          <div class="controls__group">
+            <label for="category-filter" class="controls__label">Category</label>
+            <select id="category-filter" class="controls__select">
+              <option value="all">All</option>
+              <option value="Foundations">Foundations</option>
+              <option value="Workflows">Workflows</option>
+              <option value="Shipping">Shipping</option>
+            </select>
+          </div>
+
+          <div class="controls__group">
+            <label for="sort-select" class="controls__label">Sort by</label>
+            <select id="sort-select" class="controls__select">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="title">Title (A → Z)</option>
+            </select>
+          </div>
+
+          <div class="controls__group controls__group--compact">
+            <span class="controls__label">Demo actions</span>
+            <div class="controls__buttons" id="feed-demo-controls">
+              <button type="button" data-action="add-top">Add featured at top</button>
+              <button type="button" data-action="add-end">Add post at end</button>
+              <button type="button" data-action="remove-first">Remove first</button>
+              <button type="button" data-action="remove-last">Remove last</button>
+              <button type="button" data-action="replace-second">Replace 2nd</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="posts"></section>
+
+      <div class="controls__show-more">
+        <button type="button" id="show-more">Show more posts</button>
+      </div>
+    </section>
 
     <aside class="layout__sidebar">
       <section class="card" id="about"></section>

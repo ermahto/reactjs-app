@@ -5,6 +5,7 @@ const posts = [
     title: "Understanding Large Language Models",
     subtitle: "How transformers, tokens, and attention work together",
     date: "Feb 10, 2026",
+    publishedAt: "2026-02-10",
     category: "Foundations",
     heroLabel: "LLM architecture diagram",
     heroPill: "LLM Deep Dive",
@@ -20,6 +21,7 @@ const posts = [
     title: "Practical AI for Your Everyday Work",
     subtitle: "Concrete workflows to save hours each week",
     date: "Jan 28, 2026",
+    publishedAt: "2026-01-28",
     category: "Workflows",
     heroLabel: "AI productivity dashboard",
     heroPill: "Real-world usage",
@@ -35,6 +37,7 @@ const posts = [
     title: "From Prototype to Production with AI Features",
     subtitle: "What changes when your prompt becomes a product",
     date: "Jan 5, 2026",
+    publishedAt: "2026-01-05",
     category: "Shipping",
     heroLabel: "AI feature lifecycle",
     heroPill: "Shipping to users",
@@ -50,15 +53,18 @@ const posts = [
 const popularPosts = [
   {
     title: "Prompt Engineering Cheatsheet for Developers",
-    readTime: "7 min read"
+    readTime: "7 min read",
+    targetId: 1
   },
   {
     title: "Top 5 AI Tools to Upgrade Your Dev Workflow",
-    readTime: "5 min read"
+    readTime: "5 min read",
+    targetId: 2
   },
   {
     title: "Building a Chatbot with React and GPT",
-    readTime: "12 min read"
+    readTime: "12 min read",
+    targetId: 3
   }
 ];
 
@@ -74,9 +80,17 @@ const follow = {
   channels: ["GitHub", "LinkedIn", "Twitter/X", "Email newsletter"]
 };
 
+// Derived, mutable state for the UI. We keep the original `posts` array immutable.
+let dynamicPosts = posts.slice();
+let visibleCount = 2;
+let currentCategory = "all";
+let sortMode = "newest";
+let searchQuery = "";
+
 function createPostCard(post) {
   const wrapper = document.createElement("article");
   wrapper.className = "card post-card";
+  wrapper.dataset.postId = String(post.id);
 
   const meta = document.createElement("div");
   meta.className = "post-card__meta";
@@ -106,21 +120,30 @@ function createPostCard(post) {
 
   const body = document.createElement("div");
   body.className = "post-card__body";
-  post.paragraphs.forEach((p) => {
+
+  // map: transform paragraphs into <p> nodes
+  const paragraphNodes = post.paragraphs.map((text) => {
     const para = document.createElement("p");
-    para.textContent = p;
-    body.appendChild(para);
+    para.textContent = text;
+    return para;
   });
+
+  paragraphNodes.forEach((node) => body.appendChild(node));
 
   if (post.tags?.length) {
     const tagRow = document.createElement("div");
     tagRow.className = "post-card__tag-row";
+
     post.tags.forEach((t) => {
       const tag = document.createElement("span");
       tag.className = "tag";
       tag.textContent = t;
       tagRow.appendChild(tag);
     });
+
+    // join: build a comma-separated tag summary as a tooltip
+    const tagSummary = post.tags.join(", ");
+    wrapper.title = `Tags: ${tagSummary}`;
     body.appendChild(tagRow);
   }
 
@@ -137,10 +160,52 @@ function renderPosts() {
   const container = document.getElementById("posts");
   if (!container) return;
 
-  posts.forEach((post) => {
-    const card = createPostCard(post);
-    container.appendChild(card);
-  });
+  container.innerHTML = "";
+
+  // slice: work with a shallow copy so we never mutate `dynamicPosts` when sorting
+  let working = dynamicPosts.slice();
+
+  // filter: by category
+  if (currentCategory !== "all") {
+    working = working.filter((post) => post.category === currentCategory);
+  }
+
+  // filter: by search query (title + subtitle + tags)
+  if (searchQuery.trim()) {
+    const query = searchQuery.toLowerCase();
+    working = working.filter((post) => {
+      const haystack = [
+        post.title,
+        post.subtitle,
+        (post.tags || []).join(" ")
+      ]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(query);
+    });
+  }
+
+  // sort + reverse: newest / oldest / title
+  if (sortMode === "title") {
+    working.sort((a, b) => a.title.localeCompare(b.title));
+  } else {
+    // sort ascending by date, then reverse for "newest first"
+    working.sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
+    if (sortMode === "newest") {
+      working.reverse();
+    }
+  }
+
+  // console toString: simple debugging of current controls
+  console.debug(
+    "Post controls",
+    [currentCategory, sortMode, searchQuery].toString()
+  );
+
+  // paginate with slice + map
+  const page = working.slice(0, visibleCount);
+  const cards = page.map((post) => createPostCard(post));
+  cards.forEach((card) => container.appendChild(card));
 }
 
 function renderPopular() {
@@ -165,6 +230,18 @@ function renderPopular() {
 
     row.appendChild(title);
     row.appendChild(meta);
+
+    // find: scroll to the associated post when clicking a popular item
+    row.addEventListener("click", () => {
+      const target = dynamicPosts.find((post) => post.id === item.targetId);
+      if (!target) return;
+      const article = document.querySelector(
+        `[data-post-id="${CSS.escape(String(target.id))}"]`
+      );
+      if (article) {
+        article.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
     list.appendChild(row);
   });
 
@@ -242,6 +319,129 @@ function renderFollow() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("search-input");
+  const categorySelect = document.getElementById("category-filter");
+  const sortSelect = document.getElementById("sort-select");
+  const showMoreButton = document.getElementById("show-more");
+  const demoControls = document.getElementById("feed-demo-controls");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (event) => {
+      searchQuery = event.target.value;
+      visibleCount = 2;
+      renderPosts();
+    });
+  }
+
+  if (categorySelect) {
+    categorySelect.addEventListener("change", (event) => {
+      currentCategory = event.target.value;
+      visibleCount = 2;
+      renderPosts();
+    });
+  }
+
+  if (sortSelect) {
+    sortSelect.addEventListener("change", (event) => {
+      sortMode = event.target.value;
+      renderPosts();
+    });
+  }
+
+  if (showMoreButton) {
+    showMoreButton.addEventListener("click", () => {
+      // concat example: extend the dynamic list with extra posts when we first need more
+      const extraPosts = [
+        {
+          id: 99,
+          title: "Designing Prompt Libraries for Your Team",
+          subtitle: "From personal notes to shared, versioned snippets",
+          date: "Dec 20, 2025",
+          publishedAt: "2025-12-20",
+          category: "Workflows",
+          heroLabel: "Prompt library board",
+          heroPill: "Team prompts",
+          paragraphs: [
+            "As more teammates use AI, prompts move from individual experiments to shared assets that deserve versioning and documentation.",
+            "A small prompt library with owners, examples, and known failure modes will outperform a chaotic collection of screenshots and chat logs."
+          ],
+          tags: ["Collaboration", "Prompt Design"]
+        }
+      ];
+
+      if (!dynamicPosts.some((post) => post.id === 99)) {
+        dynamicPosts = dynamicPosts.concat(extraPosts);
+      }
+
+      visibleCount += 2;
+      renderPosts();
+    });
+  }
+
+  if (demoControls) {
+    demoControls.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+      const action = target.dataset.action;
+
+      if (action === "add-top") {
+        const newPost = {
+          id: Date.now(),
+          title: "Fresh: Shipping an AI Feature This Week",
+          subtitle: "A tiny checklist before you hit deploy",
+          date: "Live now",
+          publishedAt: "9999-12-31",
+          category: "Shipping",
+          heroLabel: "Launch dashboard",
+          heroPill: "Checklist",
+          paragraphs: [
+            "Before you ship, walk through latency, failure modes, and how you'll know if the feature is working for users.",
+            "Even a lightweight checklist dramatically reduces production surprises."
+          ],
+          tags: ["Launch", "Checklists"]
+        };
+        // unshift: put the new post at the top of the feed
+        dynamicPosts.unshift(newPost);
+      } else if (action === "add-end") {
+        const newPost = {
+          id: Date.now(),
+          title: "Weekend Experiment: Building a Tiny Agent",
+          subtitle: "Letting a model call a couple of tools safely",
+          date: "Experiment",
+          publishedAt: "9999-12-30",
+          category: "Foundations",
+          heroLabel: "Agent playground",
+          heroPill: "Experiment",
+          paragraphs: [
+            "You don't need a complex framework to let models call tools—start with a narrow set of actions and clear logging.",
+            "We wired a model to call just three functions and learned a lot about error handling along the way."
+          ],
+          tags: ["Agents", "Tools"]
+        };
+        // push: append to the end
+        dynamicPosts.push(newPost);
+      } else if (action === "remove-first") {
+        // shift: drop the first (oldest on screen) item
+        dynamicPosts.shift();
+      } else if (action === "remove-last") {
+        // pop: drop the latest item in the list
+        dynamicPosts.pop();
+      } else if (action === "replace-second" && dynamicPosts.length >= 2) {
+        const updated = {
+          ...dynamicPosts[1],
+          title: "Updated: Hardening AI Features for Production",
+          subtitle: "Logging, guardrails, and UX patterns that survive real traffic",
+          tags: ["Production", "Guardrails", "UX"]
+        };
+        // splice: replace the second post in-place
+        dynamicPosts.splice(1, 1, updated);
+      }
+
+      visibleCount = Math.max(2, visibleCount);
+      renderPosts();
+    });
+  }
+
   renderPosts();
   renderPopular();
   renderAbout();
