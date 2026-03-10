@@ -410,6 +410,153 @@ export default Login;
 
 
 
+------------------------------------------------------------------------bl 3
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  background:#f4f6f9;
+  margin:0;
+}
+
+.auth-container{
+  width:360px;
+  margin:120px auto;
+  padding:30px;
+  background:white;
+  border-radius:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  text-align:center;
+}
+
+.auth-title{
+  margin-bottom:20px;
+  color:#333;
+}
+
+.auth-input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:4px;
+  font-size:14px;
+}
+
+.auth-btn{
+  width:100%;
+  padding:10px;
+  margin-top:12px;
+  background:#3b82f6;
+  border:none;
+  color:white;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.auth-btn:hover{
+  background:#2563eb;
+}
+
+.link-btn{
+  margin-top:10px;
+  background:transparent;
+  border:none;
+  color:#3b82f6;
+  cursor:pointer;
+  font-size:14px;
+}
+
+
+
+
+
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/auth.css";
+
+function Register(){
+
+  const navigate = useNavigate();
+
+  const [email,setEmail] = useState("");
+  const [phone,setPhone] = useState("");
+  const [password,setPassword] = useState("");
+
+  const handleRegister = () => {
+
+    const newUser = {
+      id: Date.now().toString(),
+      email,
+      phone,
+      password,
+      role:"user"
+    };
+
+    const users =
+      JSON.parse(localStorage.getItem("users")) || [];
+
+    users.push(newUser);
+
+    localStorage.setItem("users",JSON.stringify(users));
+
+    alert("Registration successful");
+
+    navigate("/");
+  };
+
+  return(
+
+    <div className="auth-container">
+
+      <h2 className="auth-title">Register</h2>
+
+      <input
+        className="auth-input"
+        type="email"
+        placeholder="Email"
+        onChange={(e)=>setEmail(e.target.value)}
+      />
+
+      <input
+        className="auth-input"
+        placeholder="Phone Number"
+        onChange={(e)=>setPhone(e.target.value)}
+      />
+
+      <input
+        className="auth-input"
+        type="password"
+        placeholder="Password"
+        onChange={(e)=>setPassword(e.target.value)}
+      />
+
+      <button
+        className="auth-btn"
+        onClick={handleRegister}
+      >
+        Register
+      </button>
+
+      <button
+        className="link-btn"
+        onClick={()=>navigate("/")}
+      >
+        Back to Login
+      </button>
+
+    </div>
+  );
+}
+
+export default Register;
+
+
+
+
+
+
 
 
 
