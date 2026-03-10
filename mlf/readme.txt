@@ -285,6 +285,129 @@ export default Register;
 
 
 
+------------------------------------------------------------ modified
+
+src/styles/auth.css
+
+Add the following styles:
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  background:#f4f6f9;
+}
+
+.auth-container{
+  width:350px;
+  margin:120px auto;
+  padding:30px;
+  background:white;
+  border-radius:8px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  text-align:center;
+}
+
+.auth-container h2{
+  margin-bottom:20px;
+}
+
+.auth-input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:4px;
+}
+
+.auth-btn{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  background:#3b82f6;
+  border:none;
+  color:white;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+.auth-btn:hover{
+  background:#2563eb;
+}
+Step 2 – Update Login.js
+
+Import the CSS and apply the classes.
+
+import { useState, useContext } from "react";
+import { getUsers } from "../api/apiService";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import "../styles/auth.css";
+
+function Login() {
+
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
+
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+
+    const users = await getUsers();
+
+    const user = users.find(
+      u => u.email === email && u.password === password
+    );
+
+    if(user){
+      login(user);
+
+      if(user.role === "admin"){
+        navigate("/admin/songs");
+      }else{
+        navigate("/dashboard");
+      }
+
+    }else{
+      alert("Invalid credentials");
+    }
+  };
+
+  return (
+
+    <div className="auth-container">
+
+      <h2>Music Library Login</h2>
+
+      <input
+        className="auth-input"
+        placeholder="Email"
+        onChange={(e)=>setEmail(e.target.value)}
+      />
+
+      <input
+        className="auth-input"
+        type="password"
+        placeholder="Password"
+        onChange={(e)=>setPassword(e.target.value)}
+      />
+
+      <button
+        className="auth-btn"
+        onClick={handleLogin}
+      >
+        Login
+      </button>
+
+    </div>
+
+  );
+}
+
+export default Login;
+
+
+
+
 
 
 
