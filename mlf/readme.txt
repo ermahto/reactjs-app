@@ -558,6 +558,129 @@ export default Register;
 
 
 
+---------------------------------------------------------- ml3
+src/styles/dashboard.css
+.navbar{
+  background:#1f2937;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.container{
+  padding:30px;
+}
+
+.search-box{
+  padding:10px;
+  width:300px;
+  margin-bottom:20px;
+}
+
+.song-card{
+  border:1px solid #ddd;
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:6px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.song-btn{
+  background:#2563eb;
+  border:none;
+  color:white;
+  padding:6px 10px;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+
+
+
+
+
+
+
+src/pages/Dashboard.js
+
+import { useEffect,useState } from "react";
+import { getSongs } from "../api/apiService";
+import { Link } from "react-router-dom";
+import "../styles/dashboard.css";
+
+function Dashboard(){
+
+ const [songs,setSongs]=useState([]);
+ const [search,setSearch]=useState("");
+
+ useEffect(()=>{
+
+  getSongs().then(data=>setSongs(data));
+
+ },[]);
+
+ const filteredSongs=songs.filter(song =>
+   song.name.toLowerCase().includes(search.toLowerCase())
+ );
+
+ return(
+
+ <div>
+
+  <div className="navbar">
+    <h3>Music Library</h3>
+  </div>
+
+  <div className="container">
+
+   <input
+     className="search-box"
+     placeholder="Search song"
+     onChange={(e)=>setSearch(e.target.value)}
+   />
+
+   {filteredSongs.map(song=>(
+
+     <div
+       key={song.id}
+       className="song-card"
+     >
+
+       <div>
+
+        <b>{song.name}</b>
+
+        <p>{song.album}</p>
+
+       </div>
+
+       <Link to={`/song/${song.id}`}>
+        <button className="song-btn">
+          View
+        </button>
+       </Link>
+
+     </div>
+
+   ))}
+
+  </div>
+
+ </div>
+
+ );
+}
+
+export default Dashboard;
+
+
+
+
+
+
+
 
 
 
