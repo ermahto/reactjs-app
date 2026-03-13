@@ -337,3 +337,164 @@ export default App;
 
 
 
+
+
+
+
+
+import React, { Component } from "react";
+
+class LifecycleClassExample extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+    console.log("Constructor called");
+  }
+
+  componentDidMount() {
+    console.log("Component Did Mount");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log("Component Did Update");
+  }
+
+  componentWillUnmount() {
+    console.log("Component Will Unmount");
+  }
+
+  increase = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return (
+      <div>
+        <h3>Class Component</h3>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.increase}>Increase</button>
+      </div>
+    );
+  }
+}
+
+export default LifecycleClassExample;
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+
+function LifecycleFunctionExample() {
+
+  const [count, setCount] = useState(0);
+
+  // componentDidMount
+  useEffect(() => {
+    console.log("Component Did Mount");
+
+    return () => {
+      console.log("Component Will Unmount");
+    };
+  }, []);
+
+  // componentDidUpdate
+  useEffect(() => {
+    console.log("Component Did Update");
+  }, [count]);
+
+  return (
+    <div>
+      <h3>Functional Component</h3>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increase</button>
+    </div>
+  );
+}
+
+export default LifecycleFunctionExample;
+
+
+
+
+
+
+import React, { Component } from "react";
+
+class ErrorBoundaryExample extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  componentDidCatch(error, info) {
+    console.log("Error caught:", error);
+    this.setState({ hasError: true });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h2>Error occurred in child component</h2>;
+    }
+
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundaryExample;
+
+
+
+
+
+import React, { useState } from "react";
+import LifecycleClassExample from "./LifecycleClassExample";
+import LifecycleFunctionExample from "./LifecycleFunctionExample";
+
+function App() {
+
+  const [show, setShow] = useState(true);
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h1>React Lifecycle Comparison</h1>
+
+      <button onClick={() => setShow(!show)}>
+        Toggle Component
+      </button>
+
+      {show && <LifecycleClassExample />}
+      {show && <LifecycleFunctionExample />}
+
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
