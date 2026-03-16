@@ -869,6 +869,125 @@ export default Dashboard;
 
 
 
+admin.css
+
+.admin-container{
+ padding:30px;
+}
+
+.admin-input{
+ padding:8px;
+ margin-right:10px;
+}
+
+.admin-btn{
+ background:#2563eb;
+ color:white;
+ border:none;
+ padding:8px 12px;
+ cursor:pointer;
+}
+
+.song-row{
+ border:1px solid #ddd;
+ padding:10px;
+ margin-top:10px;
+ display:flex;
+ justify-content:space-between;
+}
+
+
+
+
+AdminSongs.js
+
+import { useState,useEffect } from "react";
+import { getSongs } from "../api/apiService";
+import { v4 as uuid } from "uuid";
+import "../styles/admin.css";
+
+function AdminSongs(){
+
+ const [songs,setSongs]=useState([]);
+ const [name,setName]=useState("");
+
+ useEffect(()=>{
+   getSongs().then(data=>setSongs(data));
+ },[]);
+
+ const addSong=()=>{
+
+  const newSong={
+    id:uuid(),
+    name:name
+  };
+
+  setSongs([...songs,newSong]);
+ };
+
+ const deleteSong=(id)=>{
+
+  setSongs(songs.filter(song=>song.id!==id));
+
+ };
+
+ return(
+
+ <div className="admin-container">
+
+  <h2>Admin Song Management</h2>
+
+  <input
+   className="admin-input"
+   placeholder="Song name"
+   onChange={(e)=>setName(e.target.value)}
+  />
+
+  <button
+   className="admin-btn"
+   onClick={addSong}
+  >
+   Add Song
+  </button>
+
+  {songs.map(song=>(
+
+   <div
+    key={song.id}
+    className="song-row"
+   >
+
+    {song.name}
+
+    <button
+     onClick={()=>deleteSong(song.id)}
+    >
+     Delete
+    </button>
+
+   </div>
+
+  ))}
+
+ </div>
+
+ );
+}
+
+export default AdminSongs;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
