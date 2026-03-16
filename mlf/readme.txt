@@ -982,6 +982,247 @@ export default AdminSongs;
 
 
 
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getSongs } from "../api/apiService";
+import Navbar from "../components/Navbar";
+import "../styles/layout.css";
+
+function SongDetails(){
+
+  const { id } = useParams();
+  const [song,setSong] = useState(null);
+
+  useEffect(()=>{
+
+    getSongs().then(data=>{
+      const selected = data.find(s => s.id === id);
+      setSong(selected);
+    });
+
+  },[id]);
+
+  if(!song){
+    return <div>Loading...</div>;
+  }
+
+  return(
+
+    <div>
+
+      <Navbar/>
+
+      <div className="page-container">
+
+        <div className="card">
+
+          <h2>{song.name}</h2>
+
+          <p><b>Director:</b> {song.director}</p>
+
+          <p><b>Album:</b> {song.album}</p>
+
+          <p><b>Release Date:</b> {song.releaseDate}</p>
+
+          <button className="btn">
+            Add to Playlist
+          </button>
+
+          <button
+            className="btn"
+            style={{marginLeft:"10px"}}
+          >
+            ❤ Favourite
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
+export default SongDetails;
+
+
+
+
+
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import "../styles/layout.css";
+
+function Navbar(){
+
+  const {logout} = useContext(AuthContext);
+
+  return(
+
+    <div className="navbar">
+
+      <h3>🎵 Music Library</h3>
+
+      <div className="nav-links">
+
+        <Link to="/dashboard">Library</Link>
+
+        <Link to="/playlist">Playlist</Link>
+
+        <Link to="/favorites">Favorites</Link>
+
+        <span
+          style={{marginLeft:"20px",cursor:"pointer"}}
+          onClick={logout}
+        >
+          Logout
+        </span>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
+export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
+import { useEffect,useState } from "react";
+import { getSongs } from "../api/apiService";
+import { v4 as uuid } from "uuid";
+import Navbar from "../components/Navbar";
+import "../styles/layout.css";
+
+function AdminSongs(){
+
+ const [songs,setSongs] = useState([]);
+ const [name,setName] = useState("");
+ const [album,setAlbum] = useState("");
+ const [director,setDirector] = useState("");
+
+ useEffect(()=>{
+
+  getSongs().then(data => setSongs(data));
+
+ },[]);
+
+ const addSong = () => {
+
+  const newSong = {
+    id:uuid(),
+    name:name,
+    album:album,
+    director:director
+  };
+
+  setSongs([...songs,newSong]);
+
+ };
+
+ const deleteSong = (id) => {
+
+  setSongs(
+   songs.filter(song => song.id !== id)
+  );
+
+ };
+
+ return(
+
+ <div>
+
+  <Navbar/>
+
+  <div className="page-container">
+
+   <h2>Admin Song Management</h2>
+
+   <div style={{marginBottom:"20px"}}>
+
+     <input
+       placeholder="Song name"
+       onChange={(e)=>setName(e.target.value)}
+     />
+
+     <input
+       placeholder="Album"
+       onChange={(e)=>setAlbum(e.target.value)}
+     />
+
+     <input
+       placeholder="Director"
+       onChange={(e)=>setDirector(e.target.value)}
+     />
+
+     <button
+       className="btn"
+       onClick={addSong}
+     >
+       Add Song
+     </button>
+
+   </div>
+
+   <div className="grid">
+
+    {songs.map(song=>(
+
+     <div
+      key={song.id}
+      className="card"
+     >
+
+       <div className="card-title">
+         {song.name}
+       </div>
+
+       <div className="card-text">
+         {song.album}
+       </div>
+
+       <button
+         className="btn"
+         onClick={()=>deleteSong(song.id)}
+       >
+         Delete
+       </button>
+
+     </div>
+
+    ))}
+
+   </div>
+
+  </div>
+
+ </div>
+
+ );
+
+}
+
+export default AdminSongs;
+
+
+
+
+
+
+
 
 
 
