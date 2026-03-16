@@ -1428,6 +1428,30 @@ export default Favorites;
 
 
 
+<button className="btn">
+❤ Favourite
+</button>
+
+
+
+
+const shuffleSongs = (songs) => {
+  return songs.sort(()=>Math.random()-0.5);
+};
+
+
+
+<button className="btn">
+Shuffle
+</button>
+
+
+ok
+
+
+
+
+
 
 
 
