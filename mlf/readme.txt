@@ -1224,6 +1224,87 @@ export default AdminSongs;
 
 
 
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#f4f6f9;
+}
+
+/* top navigation */
+
+.navbar{
+  background:#1f2937;
+  color:white;
+  padding:16px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.nav-links a{
+  color:white;
+  margin-left:20px;
+  text-decoration:none;
+}
+
+/* page container */
+
+.page-container{
+  padding:30px;
+}
+
+/* grid layout */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:20px;
+}
+
+/* card style */
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  transition:transform .2s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card-title{
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.card-text{
+  color:#555;
+  margin-bottom:12px;
+}
+
+.btn{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.btn:hover{
+  background:#1d4ed8;
+}
+
+
+
+
+
+
+
+
 
 
 
