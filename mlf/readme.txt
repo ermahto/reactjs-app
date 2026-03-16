@@ -1452,6 +1452,79 @@ ok
 
 
 
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import "../styles/layout.css";
+
+function Playlist(){
+
+  const [songs,setSongs] = useState([
+    {id:1,name:"Shape of You",album:"Divide"},
+    {id:2,name:"Blinding Lights",album:"After Hours"},
+    {id:3,name:"Believer",album:"Evolve"},
+    {id:4,name:"Perfect",album:"Divide"}
+  ]);
+
+  const shuffleSongs = () => {
+
+    const shuffled = [...songs].sort(() => Math.random() - 0.5);
+
+    setSongs(shuffled);
+  };
+
+  return(
+
+    <div>
+
+      <Navbar/>
+
+      <div className="page-container">
+
+        <h2>My Playlist</h2>
+
+        <button
+          className="btn"
+          onClick={shuffleSongs}
+        >
+          Shuffle
+        </button>
+
+        <div className="grid">
+
+          {songs.map(song => (
+
+            <div
+              key={song.id}
+              className="card"
+            >
+
+              <div className="card-title">
+                {song.name}
+              </div>
+
+              <div className="card-text">
+                {song.album}
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
+}
+
+export default Playlist;
+
+
+
+
+
 
 
 
