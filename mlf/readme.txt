@@ -1539,6 +1539,152 @@ export default Playlist;
 
 
 
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import "../styles/layout.css";
+
+function Playlist(){
+
+ const allSongs = [
+  {id:1,name:"Shape of You",album:"Divide"},
+  {id:2,name:"Blinding Lights",album:"After Hours"},
+  {id:3,name:"Believer",album:"Evolve"},
+  {id:4,name:"Perfect",album:"Divide"}
+ ];
+
+ const [playlist,setPlaylist] = useState([]);
+ const [search,setSearch] = useState("");
+ const [repeat,setRepeat] = useState(false);
+
+ const addSong = (song) => {
+
+  if(!playlist.find(s => s.id === song.id)){
+   setPlaylist([...playlist,song]);
+  }
+
+ };
+
+ const shuffleSongs = () => {
+
+  const shuffled = [...playlist].sort(() => Math.random() - 0.5);
+
+  setPlaylist(shuffled);
+
+ };
+
+ const toggleRepeat = () => {
+
+  setRepeat(!repeat);
+
+ };
+
+ const filteredSongs = playlist.filter(song =>
+  song.name.toLowerCase().includes(search.toLowerCase())
+ );
+
+ return(
+
+ <div>
+
+ <Navbar/>
+
+ <div className="page-container">
+
+  <h2>Song Library</h2>
+
+  <div className="grid">
+
+   {allSongs.map(song => (
+
+    <div key={song.id} className="card">
+
+      <div className="card-title">{song.name}</div>
+
+      <div className="card-text">{song.album}</div>
+
+      <button
+        className="btn"
+        onClick={()=>addSong(song)}
+      >
+        Add to Playlist
+      </button>
+
+    </div>
+
+   ))}
+
+  </div>
+
+  <h2 style={{marginTop:"40px"}}>My Playlist</h2>
+
+  <input
+   placeholder="Search song in playlist"
+   onChange={(e)=>setSearch(e.target.value)}
+  />
+
+  <div style={{margin:"15px 0"}}>
+
+   <button
+     className="btn"
+     onClick={shuffleSongs}
+   >
+     Shuffle
+   </button>
+
+   <button
+     className="btn"
+     style={{marginLeft:"10px"}}
+     onClick={toggleRepeat}
+   >
+     Repeat: {repeat ? "ON" : "OFF"}
+   </button>
+
+  </div>
+
+  <div className="grid">
+
+   {filteredSongs.map(song => (
+
+    <div key={song.id} className="card">
+
+      <div className="card-title">{song.name}</div>
+
+      <div className="card-text">{song.album}</div>
+
+    </div>
+
+   ))}
+
+  </div>
+
+ </div>
+
+ </div>
+
+ );
+
+}
+
+export default Playlist;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
