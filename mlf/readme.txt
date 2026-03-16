@@ -681,6 +681,188 @@ export default Dashboard;
 
 
 
+-----------------------------------------------------ml5
+
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#f4f6f9;
+}
+
+/* Top Navbar */
+
+.navbar{
+  background:#1f2937;
+  color:white;
+  padding:16px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.nav-title{
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* Main Container */
+
+.container{
+  padding:30px;
+}
+
+/* Search */
+
+.search-box{
+  padding:10px;
+  width:320px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  margin-bottom:25px;
+}
+
+/* Song Grid */
+
+.song-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:20px;
+}
+
+/* Card */
+
+.song-card{
+  background:white;
+  border-radius:10px;
+  padding:20px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  transition:transform 0.2s;
+}
+
+.song-card:hover{
+  transform:translateY(-5px);
+}
+
+/* Song Info */
+
+.song-title{
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.song-album{
+  font-size:14px;
+  color:#555;
+  margin-bottom:15px;
+}
+
+/* Button */
+
+.song-btn{
+  background:#2563eb;
+  border:none;
+  color:white;
+  padding:8px 14px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.song-btn:hover{
+  background:#1d4ed8;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+import { useEffect, useState } from "react";
+import { getSongs } from "../api/apiService";
+import { Link } from "react-router-dom";
+import "../styles/dashboard.css";
+
+function Dashboard(){
+
+  const [songs,setSongs] = useState([]);
+  const [search,setSearch] = useState("");
+
+  useEffect(()=>{
+
+    getSongs().then(data => setSongs(data));
+
+  },[]);
+
+  const filteredSongs = songs.filter(song =>
+    song.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return(
+
+    <div>
+
+      <div className="navbar">
+        <div className="nav-title">🎵 Music Library</div>
+      </div>
+
+      <div className="container">
+
+        <input
+          className="search-box"
+          placeholder="Search song..."
+          onChange={(e)=>setSearch(e.target.value)}
+        />
+
+        <div className="song-grid">
+
+          {filteredSongs.map(song => (
+
+            <div
+              key={song.id}
+              className="song-card"
+            >
+
+              <div className="song-title">
+                {song.name}
+              </div>
+
+              <div className="song-album">
+                {song.album}
+              </div>
+
+              <Link to={`/song/${song.id}`}>
+                <button className="song-btn">
+                  View Details
+                </button>
+              </Link>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
+}
+
+export default Dashboard;
+
+
+
+
+
+
+
 
 
 
