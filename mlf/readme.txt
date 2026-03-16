@@ -1307,6 +1307,132 @@ body{
 
 
 
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import "../styles/layout.css";
+
+function Playlist(){
+
+ const [playlists,setPlaylists]=useState([]);
+ const [name,setName]=useState("");
+
+ const createPlaylist=()=>{
+
+   const newPlaylist={
+     id:Date.now(),
+     name:name,
+     songs:[]
+   };
+
+   setPlaylists([...playlists,newPlaylist]);
+   setName("");
+
+ };
+
+ return(
+
+ <div>
+
+   <Navbar/>
+
+   <div className="page-container">
+
+     <h2>My Playlists</h2>
+
+     <input
+       placeholder="Playlist name"
+       onChange={(e)=>setName(e.target.value)}
+     />
+
+     <button
+       className="btn"
+       onClick={createPlaylist}
+     >
+       Create
+     </button>
+
+     <div className="grid">
+
+       {playlists.map(p=>(
+
+         <div
+           key={p.id}
+           className="card"
+         >
+
+           <div className="card-title">
+             {p.name}
+           </div>
+
+           <div className="card-text">
+             {p.songs.length} Songs
+           </div>
+
+         </div>
+
+       ))}
+
+     </div>
+
+   </div>
+
+ </div>
+
+ );
+}
+
+export default Playlist;
+
+
+
+
+
+
+
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import "../styles/layout.css";
+
+function Favorites(){
+
+ const [favorites,setFavorites]=useState([]);
+
+ return(
+
+ <div>
+
+   <Navbar/>
+
+   <div className="page-container">
+
+     <h2>Favourite Songs</h2>
+
+     <div className="grid">
+
+       {favorites.length === 0 && (
+         <p>No favourite songs yet</p>
+       )}
+
+     </div>
+
+   </div>
+
+ </div>
+
+ );
+}
+
+export default Favorites;
+
+
+
+
+
+
+
+
+
+
 
 
 
