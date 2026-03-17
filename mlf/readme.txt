@@ -1671,6 +1671,227 @@ export default Playlist;
 
 
 
+A proper React approach is to manage playlists using a global state (Context) so every page can create, update, delete, or read playlists. This implements real CRUD at the application level.
+
+
+import { createContext, useState } from "react";
+
+export const PlaylistContext = createContext();
+
+export const PlaylistProvider = ({ children }) => {
+
+  const [playlists,setPlaylists] = useState([]);
+
+  const createPlaylist = (name) => {
+
+    const newPlaylist = {
+      id: Date.now(),
+      name: name,
+      songs: []
+    };
+
+    setPlaylists([...playlists,newPlaylist]);
+  };
+
+  const deletePlaylist = (id) => {
+
+    setPlaylists(
+      playlists.filter(p => p.id !== id)
+    );
+
+  };
+
+  const addSongToPlaylist = (playlistId,song) => {
+
+    const updated = playlists.map(p => {
+
+      if(p.id === playlistId){
+
+        return {
+          ...p,
+          songs:[...p.songs,song]
+        };
+
+      }
+
+      return p;
+
+    });
+
+    setPlaylists(updated);
+
+  };
+
+  return(
+
+    <PlaylistContext.Provider
+      value={{
+        playlists,
+        createPlaylist,
+        deletePlaylist,
+        addSongToPlaylist
+      }}
+    >
+
+      {children}
+
+    </PlaylistContext.Provider>
+
+  );
+
+}
+
+
+src/index.js
+
+Update it:
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { AuthProvider } from "./context/AuthContext";
+import { PlaylistProvider } from "./context/PlaylistContext";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+
+  <AuthProvider>
+    <PlaylistProvider>
+      <App />
+    </PlaylistProvider>
+  </AuthProvider>
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+import { useContext, useState } from "react";
+import Navbar from "../components/Navbar";
+import { PlaylistContext } from "../context/PlaylistContext";
+import "../styles/layout.css";
+
+function Playlist(){
+
+ const { playlists,createPlaylist,deletePlaylist } =
+  useContext(PlaylistContext);
+
+ const [name,setName] = useState("");
+
+ const handleCreate = () => {
+
+  if(name.trim() !== ""){
+    createPlaylist(name);
+    setName("");
+  }
+
+ };
+
+ return(
+
+ <div>
+
+  <Navbar/>
+
+  <div className="page-container">
+
+   <h2>My Playlists</h2>
+
+   <input
+    placeholder="Playlist name"
+    onChange={(e)=>setName(e.target.value)}
+   />
+
+   <button
+     className="btn"
+     onClick={handleCreate}
+   >
+     Create Playlist
+   </button>
+
+   <div className="grid">
+
+    {playlists.map(p => (
+
+     <div
+       key={p.id}
+       className="card"
+     >
+
+       <div className="card-title">
+         {p.name}
+       </div>
+
+       <div className="card-text">
+         {p.songs.length} songs
+       </div>
+
+       <button
+         className="btn"
+         onClick={()=>deletePlaylist(p.id)}
+       >
+         Delete
+       </button>
+
+     </div>
+
+    ))}
+
+   </div>
+
+  </div>
+
+ </div>
+
+ );
+
+}
+
+export default Playlist;
+
+
+
+
+
+
+
+src/pages/SongDetails.js
+
+Add:
+
+import { useContext } from "react";
+import { PlaylistContext } from "../context/PlaylistContext";
+
+Inside component:
+
+const { playlists, addSongToPlaylist } = useContext(PlaylistContext);
+
+Add buttons:
+
+{playlists.map(p => (
+
+<button
+ key={p.id}
+ className="btn"
+ onClick={() => addSongToPlaylist(p.id, song)}
+>
+ Add to {p.name}
+</button>
+
+))}
+
+
+
+
 
 
 
