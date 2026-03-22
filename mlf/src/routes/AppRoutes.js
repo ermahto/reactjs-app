@@ -21,29 +21,57 @@ export default function AppRoutes() {
 
         <Route
           path="/dashboard"
-          element={<ProtectedRoute role="user"><Dashboard /></ProtectedRoute>}
+          element={
+            <ProtectedRoute role="user">
+              <Dashboard />
+            </ProtectedRoute>
+          }
         />
 
-        <Route path="/song/:id" element={<SongDetails />} />
+        {/* ✅ SONG DETAILS */}
+        <Route
+          path="/song/:id"
+          element={
+            <ProtectedRoute role="user">
+              <SongDetails />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/playlist"
-          element={<ProtectedRoute role="user"><PlaylistPage /></ProtectedRoute>}
+          element={
+            <ProtectedRoute role="user">
+              <PlaylistPage />
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/playlist/:id"
-          element={<ProtectedRoute role="user"><PlaylistDetails /></ProtectedRoute>}
+          element={
+            <ProtectedRoute role="user">
+              <PlaylistDetails />
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/favorites"
-          element={<ProtectedRoute role="user"><Favorites /></ProtectedRoute>}
+          element={
+            <ProtectedRoute role="user">
+              <Favorites />
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/admin"
-          element={<ProtectedRoute role="admin"><Admin /></ProtectedRoute>}
+          element={
+            <ProtectedRoute role="admin">
+              <Admin />
+            </ProtectedRoute>
+          }
         />
       </Routes>
     </Layout>

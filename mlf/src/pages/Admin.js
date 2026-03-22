@@ -1,73 +1,204 @@
 import React, { useEffect, useState } from "react";
-import { fakeApi } from "../services/fakeApi";
+import { fakeApi as mockApi } from "../services/mockApi";
 
 export default function Admin() {
   const [songs, setSongs] = useState([]);
 
-  const load = () => {
-    fakeApi.listSongs({ forRole: "admin" }).then(setSongs);
+  // create form
+  const [form, setForm] = useState({
+    name: "",
+    director: "",
+    album: "",
+    releaseDate: ""
+  });
+
+  // edit state
+  const [editId, setEditId] = useState(null);
+  const [editForm, setEditForm] = useState({});
+
+  const load = async () => {
+    const data = await mockApi.listSongs({ forRole: "admin" });
+    setSongs(data);
   };
 
   useEffect(() => {
     load();
   }, []);
 
-  // ✅ Confirm Delete
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this song?");
-    if (!confirmDelete) return;
+  // ===== CREATE =====
+  const createSong = async () => {
+    if (!form.name) return;
 
-    await fakeApi.deleteSong(id);
-    load();
-  };
+    await mockApi.createSong(form);
 
-  // ✅ Confirm Visibility Toggle
-  const handleToggleVisibility = async (song) => {
-    const message = song.isVisibleToUsers
-      ? "Hide this song from users?"
-      : "Make this song visible to users?";
-
-    const confirmAction = window.confirm(message);
-    if (!confirmAction) return;
-
-    await fakeApi.setSongVisibility(song.id, !song.isVisibleToUsers);
-    load();
-  };
-
-  // ✅ Confirm Create (optional but good UX)
-  const handleAddSong = async () => {
-    const confirmAdd = window.confirm("Add new sample song?");
-    if (!confirmAdd) return;
-
-    await fakeApi.createSong({
-      name: "New Song",
-      director: "Admin",
-      album: "Test Album",
-      releaseDate: "2024"
+    setForm({
+      name: "",
+      director: "",
+      album: "",
+      releaseDate: ""
     });
 
     load();
   };
 
+  // ===== DELETE =====
+  const remove = async (id) => {
+    if (!window.confirm("Delete this song?")) return;
+
+    await mockApi.deleteSong(id);
+    load();
+  };
+
+  // ===== TOGGLE VISIBILITY =====
+  const toggleVisibility = async (song) => {
+    await mockApi.setSongVisibility(
+      song.id,
+      !song.isVisibleToUsers
+    );
+    load();
+  };
+
+  // ===== EDIT START =====
+  const startEdit = (song) => {
+    setEditId(song.id);
+    setEditForm(song);
+  };
+
+  // ===== EDIT SAVE =====
+  const saveEdit = async () => {
+    await mockApi.updateSong(editId, editForm);
+    setEditId(null);
+    setEditForm({});
+    load();
+  };
+
   return (
     <div>
-      <h2>Admin Panel</h2>
+      <h2>🎵 Admin Song Manager</h2>
 
-      <button onClick={handleAddSong}>Add Song</button>
+      {/* CREATE */}
+      <div style={{ marginBottom: "20px" }}>
+        <input
+          placeholder="Song Name"
+          value={form.name}
+          onChange={(e) =>
+            setForm({ ...form, name: e.target.value })
+          }
+        />
+        <input
+          placeholder="Director"
+          value={form.director}
+          onChange={(e) =>
+            setForm({ ...form, director: e.target.value })
+          }
+        />
+        <input
+          placeholder="Album"
+          value={form.album}
+          onChange={(e) =>
+            setForm({ ...form, album: e.target.value })
+          }
+        />
+        <input
+          placeholder="Release Date"
+          value={form.releaseDate}
+          onChange={(e) =>
+            setForm({ ...form, releaseDate: e.target.value })
+          }
+        />
 
-      {songs.map((s) => (
-        <div key={s.id} style={{ marginBottom: "10px" }}>
-          <strong>{s.name}</strong> | {s.album}
+        <button className="button" onClick={createSong}>
+          Add Song
+        </button>
+      </div>
 
-          <div>
-            <button onClick={() => handleDelete(s.id)}>Delete</button>
+      {/* LIST */}
+      <div className="grid">
+        {songs.map((s) => (
+          <div key={s.id} className="card">
+            {editId === s.id ? (
+              <>
+                {/* EDIT MODE */}
+                <input
+                  value={editForm.name}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, name: e.target.value })
+                  }
+                />
+                <input
+                  value={editForm.director}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      director: e.target.value
+                    })
+                  }
+                />
+                <input
+                  value={editForm.album}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      album: e.target.value
+                    })
+                  }
+                />
+                <input
+                  value={editForm.releaseDate}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      releaseDate: e.target.value
+                    })
+                  }
+                />
 
-            <button onClick={() => handleToggleVisibility(s)}>
-              {s.isVisibleToUsers ? "Hide" : "Show"}
-            </button>
+                <div className="card-actions">
+                  <button className="button" onClick={saveEdit}>
+                    Save
+                  </button>
+                  <button
+                    className="button button-secondary"
+                    onClick={() => setEditId(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* VIEW MODE */}
+                <h3>{s.name}</h3>
+                <p>{s.album}</p>
+                <p>{s.director}</p>
+
+                <div className="card-actions">
+                  <button
+                    className="button"
+                    onClick={() => startEdit(s)}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="button button-secondary"
+                    onClick={() => remove(s.id)}
+                  >
+                    Delete
+                  </button>
+
+                  <button
+                    className="button button-secondary"
+                    onClick={() => toggleVisibility(s)}
+                  >
+                    {s.isVisibleToUsers ? "Hide" : "Show"}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

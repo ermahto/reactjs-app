@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fakeApi } from "../services/fakeApi";
+import { fakeApi } from "../services/mockApi";
 import { useAuth } from "../context/AuthContext";
 import SongCard from "../components/SongCard";
 
@@ -11,19 +11,18 @@ export default function PlaylistDetails() {
   const [playlist, setPlaylist] = useState(null);
   const [songs, setSongs] = useState([]);
   const [query, setQuery] = useState("");
-  const [shuffle, setShuffle] = useState(false);
 
-  // 🔹 Load data
+  const [shuffle, setShuffle] = useState(false);
+  const [repeat, setRepeat] = useState(false); // ✅ NEW
+
   const loadData = async () => {
     if (!session) return;
 
-    // get all songs
     const allSongs = await fakeApi.listSongs({
       forRole: session.role,
     });
     setSongs(allSongs);
 
-    // get user playlists
     const allPlaylists = await fakeApi.listPlaylists({
       ownerUserId: session.userId,
     });
@@ -40,28 +39,32 @@ export default function PlaylistDetails() {
     return <div className="empty">Playlist not found</div>;
   }
 
-  // 🔹 Songs inside playlist
+  // playlist songs
   const playlistSongs = songs.filter((s) =>
     playlist.songIds.includes(s.id)
   );
 
-  // 🔹 Search inside playlist
+  // search
   const filtered = playlistSongs.filter((s) =>
     s.name.toLowerCase().includes(query.toLowerCase())
   );
 
-  // 🔹 Shuffle logic
-  const displaySongs = shuffle
+  // shuffle
+  let displaySongs = shuffle
     ? [...filtered].sort(() => Math.random() - 0.5)
     : filtered;
 
-  // 🔹 Add song
+  // ✅ REPEAT LOGIC
+  if (repeat && displaySongs.length > 0) {
+    displaySongs = [...displaySongs, ...displaySongs]; // duplicate list
+  }
+
+  // add/remove
   const addSong = async (songId) => {
     await fakeApi.addSongToPlaylist(id, songId);
     loadData();
   };
 
-  // 🔹 Remove song
   const removeSong = async (songId) => {
     await fakeApi.removeSongFromPlaylist(id, songId);
     loadData();
@@ -78,8 +81,20 @@ export default function PlaylistDetails() {
           onChange={(e) => setQuery(e.target.value)}
         />
 
-        <button className="button" onClick={() => setShuffle(!shuffle)}>
-          {shuffle ? "Disable Shuffle" : "Shuffle"}
+        {/* SHUFFLE */}
+        <button
+          className="button"
+          onClick={() => setShuffle(!shuffle)}
+        >
+          {shuffle ? "Shuffle ON" : "Shuffle"}
+        </button>
+
+        {/* ✅ REPEAT BUTTON */}
+        <button
+          className="button"
+          onClick={() => setRepeat(!repeat)}
+        >
+          {repeat ? "Repeat ON" : "Repeat"}
         </button>
       </div>
 
@@ -90,9 +105,9 @@ export default function PlaylistDetails() {
         <div className="empty">No songs in playlist</div>
       ) : (
         <div className="grid">
-          {displaySongs.map((s) => (
+          {displaySongs.map((s, index) => (
             <SongCard
-              key={s.id}
+              key={index}
               song={s}
               onFav={() => {}}
               onAdd={() => removeSong(s.id)}

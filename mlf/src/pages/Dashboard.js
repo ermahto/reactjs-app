@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useSongs } from "../context/SongContext";
-import { fakeApi } from "../services/fakeApi";
+import { fakeApi } from "../services/mockApi";
 import SongCard from "../components/SongCard";
 
 export default function Dashboard() {

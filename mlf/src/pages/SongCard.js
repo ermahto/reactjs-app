@@ -1,23 +1,40 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SongCard({ song, onFav, onAdd }) {
+  const navigate = useNavigate();
+
+  const goToDetails = () => {
+    navigate(`/song/${song.id}`);
+  };
+
   return (
-    <div className="card" style={{ width: "200px" }}>
+    <div className="card">
       <h3>{song.name}</h3>
       <p>{song.album}</p>
       <p>{song.director}</p>
 
       <div className="card-actions">
-        <button className="button" onClick={() => onFav(song.id)}>
-          ❤️
+        <h3>{song.name} TEST BUTTON</h3>
+        {/* ✅ NEW DETAILS BUTTON */}
+        <button className="button" onClick={goToDetails}>
+          📄 Details dddd
         </button>
 
+        {/* FAVORITE */}
+        {onFav && (
+          <button className="button" onClick={() => onFav(song.id)}>
+            ❤️fffff
+          </button>
+        )}
+
+        {/* ADD (PLAYLIST) */}
         {onAdd && (
           <button
             className="button button-secondary"
             onClick={() => onAdd(song.id)}
           >
-            ➕
+            ➕fffff
           </button>
         )}
       </div>

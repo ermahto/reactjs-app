@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { fakeApi } from "../services/fakeApi";
+import { fakeApi } from "../services/mockApi";
 import { useAuth } from "./AuthContext";
 
 const SongContext = createContext();

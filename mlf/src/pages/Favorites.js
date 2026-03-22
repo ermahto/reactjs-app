@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fakeApi } from "../services/fakeApi";
+import { fakeApi } from "../services/mockApi";
 import { useAuth } from "../context/AuthContext";
 import SongCard from "../components/SongCard";
 
