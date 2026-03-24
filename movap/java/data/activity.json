@@ -1,0 +1,64 @@
+[ {
+  "id" : "13cd1fa6-41a8-4dbd-b6b5-392281cf719a",
+  "userId" : "a1",
+  "action" : "ADD_REVIEW",
+  "entityType" : "REVIEW",
+  "entityId" : "d25c474f-6d54-4873-ae8e-cb7c44a10744",
+  "timestamp" : 1774338856541
+}, {
+  "id" : "40336869-0aa2-4ad2-b256-26ff77a42c5f",
+  "userId" : "a1",
+  "action" : "ADD_REVIEW",
+  "entityType" : "REVIEW",
+  "entityId" : "d95e74f6-034e-4554-bb64-cca9f5302372",
+  "timestamp" : 1774338877624
+}, {
+  "id" : "359ed206-d0ee-4895-b7fb-2f22ec838bfc",
+  "userId" : "admin",
+  "action" : "MODERATE_REVIEW_REJECTED",
+  "entityType" : "REVIEW",
+  "entityId" : "d25c474f-6d54-4873-ae8e-cb7c44a10744",
+  "timestamp" : 1774338925164
+}, {
+  "id" : "b59c0f5a-6f14-44db-bb72-a63a95b9d4f6",
+  "userId" : "admin",
+  "action" : "MODERATE_REVIEW_REJECTED",
+  "entityType" : "REVIEW",
+  "entityId" : "d95e74f6-034e-4554-bb64-cca9f5302372",
+  "timestamp" : 1774338946078
+}, {
+  "id" : "31fcd640-c5fc-482b-a4af-d56d6769173d",
+  "userId" : "u1",
+  "action" : "ADD_REVIEW",
+  "entityType" : "REVIEW",
+  "entityId" : "b27e5272-4dc4-4c4b-aebd-5fd6d767c4b4",
+  "timestamp" : 1774340176679
+}, {
+  "id" : "efa77780-19fb-42ae-adba-4b5a69dc4a89",
+  "userId" : "admin",
+  "action" : "MODERATE_REVIEW_APPROVED",
+  "entityType" : "REVIEW",
+  "entityId" : "b27e5272-4dc4-4c4b-aebd-5fd6d767c4b4",
+  "timestamp" : 1774340364004
+}, {
+  "id" : "64977b9c-fe2c-45cf-86e4-2c658d6948db",
+  "userId" : "admin",
+  "action" : "EDIT_MOVIE",
+  "entityType" : "MOVIE",
+  "entityId" : "m1",
+  "timestamp" : 1774355610763
+}, {
+  "id" : "67521e40-dc03-4266-8a51-43f9b1da74cb",
+  "userId" : "u1",
+  "action" : "CREATE_WATCHLIST",
+  "entityType" : "WATCHLIST",
+  "entityId" : "7edcf46d-4c2f-4165-9a14-0fed717c13f5",
+  "timestamp" : 1774355865844
+}, {
+  "id" : "228bfb9c-a473-4946-9a18-e8f26eefe5be",
+  "userId" : "unknown",
+  "action" : "DELETE_WATCHLIST",
+  "entityType" : "WATCHLIST",
+  "entityId" : "7edcf46d-4c2f-4165-9a14-0fed717c13f5",
+  "timestamp" : 1774356305129
+} ]

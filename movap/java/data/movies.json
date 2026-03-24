@@ -1,0 +1,17 @@
+[ {
+  "id" : "m1",
+  "title" : "Inception",
+  "genres" : [ "Sci-Fi", "Thriller" ],
+  "actors" : [ "Leonardo DiCaprio", "Joseph Gordon-Levitt" ],
+  "description" : "A thief enters dreams to steal secrets.",
+  "year" : 2010,
+  "avgRating" : 4.7
+}, {
+  "id" : "m2",
+  "title" : "Interstellar",
+  "genres" : [ "Sci-Fi", "Drama" ],
+  "actors" : [ "Matthew McConaughey", "Anne Hathaway" ],
+  "description" : "A team travels through a wormhole to save humanity.",
+  "year" : 2014,
+  "avgRating" : 4.8
+} ]

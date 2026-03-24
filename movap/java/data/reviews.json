@@ -1,0 +1,22 @@
+[ {
+  "id" : "d25c474f-6d54-4873-ae8e-cb7c44a10744",
+  "movieId" : "m1",
+  "userId" : "a1",
+  "rating" : 5,
+  "comment" : "ffff",
+  "status" : "REJECTED"
+}, {
+  "id" : "d95e74f6-034e-4554-bb64-cca9f5302372",
+  "movieId" : "m1",
+  "userId" : "a1",
+  "rating" : 5,
+  "comment" : "sssd",
+  "status" : "REJECTED"
+}, {
+  "id" : "b27e5272-4dc4-4c4b-aebd-5fd6d767c4b4",
+  "movieId" : "m1",
+  "userId" : "u1",
+  "rating" : 5,
+  "comment" : "nice....!",
+  "status" : "APPROVED"
+} ]
