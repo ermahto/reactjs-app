@@ -4,9 +4,9 @@
 }
 
 body {
+  background-image: url("bg.jpg");
   margin: 0;
-  background: #f2f4f7;
-  color: #1f2937;
+
 }
 
 .app {
@@ -254,4 +254,82 @@ button:hover {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* container */
+.watchlists {
+  display: grid;
+  gap: 10px;
+}
+
+/* card */
+.watch-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fafafa;
+}
+
+/* title */
+.watch-item h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* list */
+.watch-item ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* row */
+.watch-item li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 14px;
+}
+
+/* empty state */
+.watch-item li.empty {
+  justify-content: center;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* delete button */
+.watch-item > button {
+  align-self: flex-end;
+  margin-top: 6px;
+}
+
+/* buttons under movie card */
+.watchlist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.watchlist-actions button {
+  font-size: 12px;
+  padding: 5px 8px;
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.watchlist-actions button:hover {
+  background: #d1d5db;
 }
